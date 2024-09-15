@@ -13,7 +13,7 @@ export class Form extends Component {
       nameDirty: false,
       priceDirty: false,
       descriptionDirty: false,
-      nameError: "Поле название не может быть пустым",
+      nameError: "Поле наименование не может быть пустым",
       descriptionError: "Поле описание не может быть пустым",  
       priceError: "Поле цена не может быть пустым",     
     }
@@ -29,24 +29,26 @@ export class Form extends Component {
   return (
           <div>
             <form ref={(el) => this.myForm = el}>
+              
               {(this.state.nameDirty && this.state.nameError) && <div style={{color: 'red'}}> {this.state.nameError} </div>}
-              <input value={this.state.name} onBlur={e => this.blueHandler(e)} placeholder='Name'  name = 'name' onChange={(event) => this.nameHandler(event)} />
+              <input value={this.state.names} onBlur={(event) => this.blueHandler(event)} placeholder='Name'  name='name' onChange={(event) => this.nameHandler(event)} />
               
               {(this.state.descriptionDirty && this.state.descriptionError) && <div style={{color: 'red'}}> {this.state.descriptionError} </div>}
               <textarea value={this.state.descriptions} onBlur={(event) => this.blueHandler(event)}  placeholder='Description' name = 'description' onChange={(event) => this.descriptionHandler(event)}></textarea>
               
               {(this.state.priceDirty && this.state.priceError) && <div style={{color: 'red'}}> {this.state.priceError} </div>}
-              <input  placeholder='Price' name='price' onBlur={(event) => this.blueHandler(event)} onChange={(event) => this.priceHandler(event)}/>
+              <input  value={this.state.prices} placeholder='Price' name='price' onBlur={(event) => this.blueHandler(event)} onChange={(event) => this.priceHandler(event)}/>
               
-              <button type='button' onClick={() => {
+              <button disabled={(this.state.nameError.length > 0 || this.state.descriptionError.length > 0 || this.state.priceError.length > 0)}  type='button' onClick={() => {
                 this.myForm.reset()
                 this.productAdd = {
                 name: this.state.name,
                 description: this.state.description,
                 price: parseInt(this.state.price),
           }
-          if(this.props.product)
-              this.productAdd.id = this.props.product.id
+          if(this.props.product) 
+            this.productAdd.id = this.props.product.id
+
           this.props.onAdd(this.productAdd)
           }}>Отправить</button>
         </form>       
@@ -55,22 +57,16 @@ export class Form extends Component {
   )
 }
 
-  blueHandler(event) {
+blueHandler(event) {
     switch (event.target.name){
       case 'name': 
-        if(this.state.name.length === 0)
-          this.setState({nameDirty: true})
+        this.setState({nameDirty: true})
         break
       case 'description': 
-        if(this.state.description.length === 0)
-          this.setState({descriptionDirty: true})
+        this.setState({descriptionDirty: true})
         break
       case 'price': 
-        if(this.state.price.length === 0) {
-          this.setState({priceDirty: true})
-        } else if (Math.sign(parseInt(event.target.value) !== 1)) {
-          this.setState({priceDirty: true})
-        }
+        this.setState({priceDirty: true})
 
       break
   }
@@ -79,10 +75,10 @@ export class Form extends Component {
   nameHandler (event) {
     this.setState({name: event.target.value})
 
-    if(this.state.description.length > 0) {
-      this.setState({nameDirty: false})
+    if(this.state.name.length < 1) {
+      this.setState({nameError: "Поле наименование не может быть пустым"})
     } else {
-      this.setState({nameDirty: true})
+      this.setState({nameError: ""})
     }
   }
 
@@ -90,28 +86,23 @@ export class Form extends Component {
 
     this.setState({description: event.target.value})
 
-    if(this.state.description.length > 0) {
-      this.setState({descriptionDirty: false})
+    if(this.state.description.length < 1) {
+      this.setState({descriptionError: "Поле описание не может быть пустым"})
     } else {
-      this.setState({descriptionDirty: true})
+      this.setState({descriptionError: ""})
     }
 
   }
 
   priceHandler (event) {
     this.setState({price: event.target.value})
-
-    if (this.state.price.length < 0){ 
+    if (this.state.price.length < 1){ 
       this.setState({priceError: "Поле цена не может быть пустым"})
-      this.setState({priceDirty: true})
     } else if (Math.sign(parseInt(event.target.value)) !== 1) {
       this.setState({priceError: "Только пложительные числа"})
-      this.setState({priceDirty: true})
     } else {
       this.setState({priceError: ""})
     }
-
-    console.log(Math.sign(parseInt(event.target.value)))
   }
 
 }

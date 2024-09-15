@@ -71,21 +71,15 @@ export class App extends Component {
           "price": product.price
       },
       success: function(response) {
-           console.log(response);
+         console.log(response);
       },
       error: function(response) {
           console.log(response);
   }
   });
 
-  axios.get(baseUrl)
-  .then((res) =>  {
-    this.setState({products: res.data})
-  })
-  .catch(err => {
-    console.log(err);
-  })
-
+  this.setState({products: [...this.state.products, {id, ...product}]})
+  
   }
 }
 export default App;

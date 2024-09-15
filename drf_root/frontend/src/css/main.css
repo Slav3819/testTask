@@ -93,3 +93,17 @@ form button:hover {
 .product form button:hover {
     transform: scale(1.02);
 }
+
+form button:disabled {
+    width: 100%;
+    background: #2b2a2a;
+    cursor: no-drop;
+}
+
+form button:disabled:hover {
+    transform: scale(1);
+}
+
+.product form button:disabled {
+    background: #7bb2be;
+}
